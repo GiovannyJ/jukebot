@@ -22,8 +22,8 @@ jobs:
   
       - name: Create Docker image
         run: |
-          cd fullstack_spotify_web/
-          docker build -t fullstack_spotify_web:${{steps.set_tag_name.outputs.tag_name}} .
+          cd client/
+          docker build -t jukebot_client:${{steps.set_tag_name.outputs.tag_name}} .
 
       
   deploy:
@@ -36,9 +36,9 @@ jobs:
 
       - name: Kill all running containers
         run: |
-          cd fullstack_spotify_web/scripts/
+          cd client/scripts/
           chmod +x docker_kill.sh
           ./docker_kill.sh
 
       - name: Run the docker image
-        run: docker run -d -p 8080:8080 fullstack_spotify_web:${{needs.build.outputs.tag_name}} .
+        run: docker run -d -p 2106:2106 jukebot_client:${{needs.build.outputs.tag_name}} .
