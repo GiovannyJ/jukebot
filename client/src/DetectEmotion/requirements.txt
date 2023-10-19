@@ -1,0 +1,6 @@
+opencv-python-headless==4.1.2
+numpy
+pandas
+tensorflow
+keras
+imageio
