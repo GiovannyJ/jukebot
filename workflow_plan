@@ -1,0 +1,9 @@
+start state:
+-when code is pushed
+    dockerize code
+    kill prev containers
+    launch container with perm TCP connection @ 0.0.0.0:2106
+
+finish state:
+-tcp server running
+-code logic updated

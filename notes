@@ -1,0 +1,30 @@
+using TCP connection can be potentially faster
+
+run code on dockerized env bc windows and mac
+
+look to see if client should be on PI or on HOST
+-server:
+-client:
+
+https://github.com/Dhanush45/Realtime-emotion-detectionusing-python
+https://github.com/kipr/opencv/blob/master/data/haarcascades/haarcascade_frontalface_default.xml
+
+
+-server send:
+  -commands:
+
+-server recv:
+  -data:
+  face
+  status
+  response
+
+-client send:
+  -data:
+  face
+  status
+
+-client recv:
+  -commands:
+  run
+  stop
