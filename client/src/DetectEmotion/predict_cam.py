@@ -4,7 +4,6 @@ import cv2
 import numpy as np
 from tensorflow.keras.models import model_from_json
 from tensorflow.keras.preprocessing import image
-import queue
 
 class EmotionRecognizer:
     def __init__(self, model_path='fer.json', weights_path='fer.h5', cascade_path='haarcascade_frontalface_default.xml'):
@@ -13,7 +12,6 @@ class EmotionRecognizer:
         self.face_cascade = cv2.CascadeClassifier(cascade_path)
         self.emotion = None
         self.emotion_lock = threading.Lock()
-        self.emotion_queue = queue.Queue()
 
     def predict_emotion(self, frame):
         gray_img = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -34,7 +32,6 @@ class EmotionRecognizer:
 
             with self.emotion_lock:
                 self.emotion = predicted_emotion
-                self.emotion_queue.put(predicted_emotion)
 
     def run_emotion_detection(self):
         cap = cv2.VideoCapture(0)
@@ -45,10 +42,25 @@ class EmotionRecognizer:
                 continue
 
             self.predict_emotion(test_img)
+            
+            # Overlay detected emotion on the video feed
+            with self.emotion_lock:
+                if self.emotion:
+                    cv2.putText(test_img, f'Emotion: {self.emotion}', (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+
+            # Display the video feed
+            cv2.imshow("Emotion Detection", test_img)
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
 
         cap.release()
+        cv2.destroyAllWindows()
 
+if __name__ == "__main__":
+    recognizer = EmotionRecognizer()
+    emotion_detection_thread = threading.Thread(target=recognizer.run_emotion_detection)
+    emotion_detection_thread.start()
 
-# if __name__ == '__main__':
-#     detect = EmotionRecognizer()
-#     detect.run_emotion_detection()
+    emotion_detection_thread.join()  # Wait for the emotion detection thread to finish
+
+    cv2.destroyAllWindows()  # Close the OpenCV window when done

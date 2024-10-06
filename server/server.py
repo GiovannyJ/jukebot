@@ -13,74 +13,9 @@ Using TCP connection (localhost:2106)
 import socket
 from src import spotify_controller
 
-# HOST = '127.0.0.1'
-# PORT = 12345
-
-# sc = spotify_controller.spotify()
-
-# emotion_count = {
-#     'angry': 0,
-#     'disgust': 0,
-#     'fear': 0,
-#     'happy': 0,
-#     'sad': 0,
-#     'surprise': 0,
-#     'neutral': 0,
-# }
-# def handle_client(client_socket):
-#     command = input("Enter a command: ")
-
-#     client_socket.send(command.encode())
-#     while True:
-
-#         response = client_socket.recv(1024).decode()
-#         print(f"Client response: {response}")
-        
-#         if response in emotion_count:
-#             process_response(response)
-
-# def process_response(response):
-#     # Update the response count for the received response
-#     emotion_count[response] += 1
-
-#     if emotion_count['angry'] == 5:
-#         print("THATS ONE ANGRY NIGGER")
-    
-#     elif emotion_count['disgust'] == 5:
-#         self.__sc.play_song("HUMBLE")
-    
-#     elif emotion_count['fear'] == 5:
-#         pass
-    
-#     elif emotion_count['happy'] == 5:
-#         self.__sc.play_song("HUMBLE")
-    
-#     elif emotion_count['sad'] == 5:
-#         pass
-    
-#     elif emotion_count['surprise'] == 5:
-#         pass
-    
-#     elif emotion_count['neutral'] == 5:
-#         pass
-
-
-# def main():
-#     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-#     server.bind((HOST, PORT))
-#     server.listen(5)
-
-#     print(f"Listening on {HOST}:{PORT}")
-
-#     while True:
-#         client_socket, addr = server.accept()
-#         print(f"Accepted connection from {addr[0]}:{addr[1]}")
-
-#         handle_client(client_socket)
-
 class Host:
     def __init__(self):
-        self.__HOST = '127.0.0.1'
+        self.__HOST = '127.0.0.1'#'192.168.1.215'
         self.__PORT = 12345
         self.__sc = spotify_controller.spotify()
         self.emotion_count = {
@@ -99,10 +34,18 @@ class Host:
         self.__server.listen(5)
         print(f"Listening on {self.__HOST}:{self.__PORT}")
 
-        while True:
-            self.__client, addr = self.__server.accept()
-            print(f"Accepted connection from {addr[0]}:{addr[1]}")
-            self.__handle_client()
+        try:
+            while True:
+                self.__client, addr = self.__server.accept()
+                print(f"Accepted connection from {addr[0]}:{addr[1]}")
+                self.__handle_client()
+
+        except KeyboardInterrupt:
+            print("Ctrl+C detected. Exiting...")
+        except Exception as e:
+            print(f"An error occurred: {e}")
+        finally:
+            self.__server.close()
 
     def __handle_client(self):
         command = input("Enter a command: ")
@@ -116,7 +59,7 @@ class Host:
         self.emotion_count[response] += 1
 
         if self.emotion_count['angry'] == 5:
-            print("THATS ONE ANGRY NIGGER")
+            pass
         
         elif self.emotion_count['disgust'] == 5:
             self.__sc.play_song("HUMBLE")
